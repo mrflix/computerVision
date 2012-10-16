@@ -1,0 +1,51 @@
+html {
+    min-height: 100%;
+    font: 13px/21px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #373737;
+    line-height: 1.625;
+    font-weight: 300;
+    background: #fff;
+}
+body {
+    margin: 0;
+    /* get rid of the anoying text selection - this is a webapp - no webpage */
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+         -o-user-select: none;
+            user-select: none;
+}
+#controls {
+    width: 100%;
+    padding: 13px 0 12px;
+    color: white;
+  	background: #3d3d3d;
+  	border-top: 1px solid rgba(0,0,0,.55);
+    border-bottom: 1px solid rgba(0,0,0,.55);
+    text-shadow: 0 1px black;
+    box-shadow: 
+        0 1px rgba(255,255,255,.13) inset,
+        0 -1px rgba(255,255,255,.13) inset,
+        0 1px rgba(0, 0, 0, 0.13),
+        0 2px rgba(0, 0, 0, 0.05);
+    position: fixed;
+}
+label { margin-left: 21px; padding-right: 5px; vertical-align: top; }
+input { line-height: 21px; }
+input[type=range] { vertical-align: middle; }
+canvas { vertical-align: bottom; }
+#holder { padding: 62px 13px 13px; }
+#statusBar { 
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    background: white;
+}
+    #statusBar div { 
+        padding: 5px 21px;
+        color: black;
+        background: rgba(255,0,0,.34);
+        border-top: 1px solid red;
+        display: block;
+    }
