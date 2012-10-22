@@ -6,7 +6,7 @@
 
 <header>
   <span>Computer Vision Assignment by Felix Niklas</span>
-  <span class="right">18 Oct 2012</span>
+  <span class="right">21 Oct 2012</span>
 </header>
 <article>
   <h1>Edge Detection</h1>
@@ -28,9 +28,9 @@
     I like how jQuery makes DOM-interactions simple. Because of that I'd like to solve this assignment building a similar library. 
     It should look like this:
   </p>
-  <pre>π('test.png').grayscale().convolve([0,1,0,1,1,1,0,1,0]).appendTo('body');</pre>
+  <pre>imageVision('test.png').convolve([0,1,0,1,1,1,0,1,0]).appendTo('body');</pre>
   <p>
-    Chaining is simple with javascript – you just have to return <code>this</code> in every function.
+    Chaining is simple with javascript – you only have to return <code>this</code> in every function.
   </p>
   <p>
     The challenge is that we read out pixels of an image and images aren't there instantly – we first have to load them.
@@ -80,7 +80,7 @@ testImage.convolve([[-1, 0, 1, -2, 0, 2, -1, 0, 1]]);</pre>
   <p id="output"></p>
   <p>
     On my machine I see <i>seperately</i> as minimal slower then combined. Also – my result is dissorted
-    because I put the 3x1 filter into a 3x3 matrix since my code can't handle 1x3 matrices.
+    because I put the 3x1 filter into a 3x3 matrix since my code can't handle 3x1 matrices.
   </p>
 </article>
   
