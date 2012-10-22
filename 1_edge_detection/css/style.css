@@ -89,12 +89,32 @@ button {
 }
 
 .center {
+  width: 100%;
+  
   display: -webkit-box;
+  display:    -moz-box;
+  display:     -ms-box;
+  display:      -o-box;
+  display:         box;
+  
   -webkit-box-pack: center;
-  -webkit-box-align: center;
+     -moz-box-pack: center;
+      -ms-box-pack: center;
+       -o-box-pack: center;
+          box-pack: center;
+          
+  -webkit-box-align: center;        
+     -moz-box-align: center;
+      -ms-box-align: center;  
+       -o-box-align: center;
+          box-align: center;
 } 
 .flex {
   -webkit-box-flex: 1;
+     -moz-box-flex: 1;
+      -ms-box-flex: 1;
+       -o-box-flex: 1;
+          box-flex: 1;
 }
 .clearfix:before,
 .clearfix:after {
