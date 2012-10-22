@@ -1,51 +1,228 @@
 html {
     min-height: 100%;
-    font: 13px/21px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #373737;
+    font: 16px/24px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #888;
     line-height: 1.625;
-    font-weight: 300;
-    background: #fff;
+    font-weight: 400;
+    background: white;
 }
 body {
     margin: 0;
-    /* get rid of the anoying text selection - this is a webapp - no webpage */
-    -webkit-user-select: none;
-     -khtml-user-select: none;
-       -moz-user-select: none;
-         -o-user-select: none;
-            user-select: none;
 }
-#controls {
-    width: 100%;
-    padding: 13px 0 12px;
-    color: white;
-  	background: #3d3d3d;
-  	border-top: 1px solid rgba(0,0,0,.55);
-    border-bottom: 1px solid rgba(0,0,0,.55);
-    text-shadow: 0 1px black;
-    box-shadow: 
-        0 1px rgba(255,255,255,.13) inset,
-        0 -1px rgba(255,255,255,.13) inset,
-        0 1px rgba(0, 0, 0, 0.13),
-        0 2px rgba(0, 0, 0, 0.05);
-    position: fixed;
+header {
+  padding: 8px 21px;
+  font-size: 13px;
+  color: #bbb;
 }
-label { margin-left: 21px; padding-right: 5px; vertical-align: top; }
-input { line-height: 21px; }
-input[type=range] { vertical-align: middle; }
-canvas { vertical-align: bottom; }
-#holder { padding: 62px 13px 13px; }
-#statusBar { 
-    bottom: 0;
+  header span {
+    padding: 8px 0;
+    display: inline-block;
+  }
+  .right {
+    float: right;
+  }
+article {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+h1, h2 {
+  color: black;
+  font-weight: 500;
+  font-family: "Din", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+h1 {
+  font-size: 3em;
+  text-align: center;
+}
+p, h2, pre {
+  max-width: 640px;
+  margin: 1.44em auto;
+  padding: 0 13px;
+}
+h2 {
+  margin-bottom: 0;
+}
+p {
+  line-height: 32px;
+}
+  h2 + p {
+    margin-top: 0.34em;
+  }
+a {
+  color: hsl(205,100%,50%);
+  font-weight: normal;
+  text-decoration: none;
+}
+canvas, img {
+  vertical-align: bottom;
+}
+pre {
+  padding: 13px;
+  color: black;
+  font-size: 13px;
+  background: hsl(200,10%,95%);
+}
+.demo {
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+  position: relative;
+  display: -webkit-box;
+  -webkit-perspective: 1000px;
+  /* get rid of the anoying text selection - this is a webapp - no webpage */
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+       -o-user-select: none;
+          user-select: none;
+}
+  .source, .resultArea {
+    position: relative;
+  }
+  .flex {
+    display: inline-block;
+  }
+  .resultArea:before {
+    content: "";
     width: 100%;
-    position: fixed;
+    height: 100%;
+    position: absolute;
+    box-sizing: border-box;
+    background: hsl(200,10%,95%);
+  }
+  .indicator {
+    margin: -1px 0 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border: none;
+    background: red;
+    position: absolute;
     z-index: 1;
-    background: white;
-}
-    #statusBar div { 
-        padding: 5px 21px;
-        color: black;
-        background: rgba(255,0,0,.34);
-        border-top: 1px solid red;
-        display: block;
+    opacity: 0;
+    box-shadow: 0 0 5px hsla(0,100%,50%,1);
+    -webkit-transition: opacity 250ms;
+  }
+    .progress .indicator {
+      opacity: 1;
     }
+    .finished .indicator {
+      opacity: 0;
+    }
+    .indicator:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: -webkit-linear-gradient(left, hsla(0,100%,50%,0), hsla(0,100%,50%,.55), hsla(0,100%,50%,0));
+    }
+  .result {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+  .result.loaded {
+    -webkit-transition: left 1s ease-in-out, top 1s ease-in-out;
+  }
+  .result.finished {
+    -webkit-animation: flyBack 1s ease-in-out;
+  }
+  @-webkit-keyframes flyBack {
+    50% { -webkit-transform: translateZ(144px) }
+  }
+  .curtain {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    top: 0;
+    overflow: hidden;
+  }
+    .finished .curtain {
+      height: 100%;
+    }
+ 
+.operator {
+  padding: 0 21px;
+  position: relative;
+}
+  .operator hr {
+    margin: -50px 0 0;
+    height: 1px;
+    width: 100%;
+    left: 0;
+    top: 50%;
+    background: hsl(200,5%,55%);
+    border: none;
+    z-index: -1;
+    position: absolute;
+  }
+.element {
+  text-align: center;
+  position: relative;
+  color: hsl(200,5%,55%);
+  border: 1px solid hsl(200,5%,55%);
+  background: hsl(200,10%,87%);
+  margin-bottom: 13px;
+}
+.center {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+}
+.structuringElement {
+  /*margin-top: 96px;*/
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  display: inline-block;
+  position: relative;
+  vertical-align: bottom;
+}
+  .structuringElement input {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    float: left;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 100%;
+    text-align: center;
+    font-weight: bold;
+    outline: none;
+    cursor: default;
+    box-sizing: border-box;
+  }
+  .structuringElement.five input {
+      width: 24px;
+      height: 24px;
+  }
+  .structuringElement .checked {
+    color: inherit;
+  }
+  .controls {
+    padding: 3px 5px;
+    background: -webkit-linear-gradient(hsl(200,10%,87%), hsl(200,10%,83%));
+    border-top: 1px solid hsl(200,5%,55%);
+  }
+  
+button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border: none;
+  color: white;
+  font-size: 21px;
+  padding: 8px 21px;
+  background: hsl(205,100%,50%);
+}
+  
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}

@@ -1,32 +1,98 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Edge Detection</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
-<div id="controls"> 
-  <label for="file">File</label>
-  <select id="file">
-    <option value="360411_pixelio.png">360411_pixelio.png</option>
-    <option value="jet.png">jet.png</option>
-  </select>
-  <label for="technic">Technic</label>
-  <select id="technic">
-    <option value="360411_pixelio.png">360411_pixelio.png</option>
-    <option value="jet.png">jet.png</option>
-  </select>
-</div>
-<div id="statusBar"></div>
-<div id="holder">
-  <canvas id="render">Sorry, your browser doesn't support the technology used in this Demo. Please use an up-to-date browser.</canvas>
-</div>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Edge Detection</title>
+<link rel="stylesheet" href="css/style.css" />
+
+<header>
+  <span>Computer Vision Assignment by Felix Niklas</span>
+  <span class="right">18 Oct 2012</span>
+</header>
+<article>
+  <h1>Edge Detection</h1>
+  <h2>Assigment</h2>
+  <p>
+    Convolve the images with a <a href="#simple">(1) simple</a> and a <a href="#sobel">(2) sobel-filter</a>.
+    Add 128 to the result of the gradient image to show the <a href="#negative">(3) negative</a> values.
+    <a href="compare">(4) Compare the speed</a> of seperated convolution with the two dimensional convolution of the sobel-filter. 
+  </p>
+  <p>
+    Render both the magnitude and the direction of the gradient.
+  </p>
+  <p>
+    Then combine the magnitude- and gradient visualization in one image by encoding the angle in color 
+    whilest keeping the brightness either constant or encode the magnitude of the gradient in it.
+  </p>
+  <h2>Execution</h2>
+  <p>
+    I like how jQuery makes DOM-interactions simple. Because of that I'd like to solve this assignment building a similar library. 
+    It should look like this:
+  </p>
+  <pre>π('test.png').grayscale().convolve([0,1,0,1,1,1,0,1,0]).appendTo('body');</pre>
+  <p>
+    Chaining is simple with javascript – you just have to return <code>this</code> in every function.
+  </p>
+  <p>
+    The challenge is that we read out pixels of an image and images aren't there instantly – we first have to load them.
+    This breaks the chain.
+  </p>
+  <p>
+    I found a solution in dustin diaz's <a href="http://www.dustindiaz.com/async-method-queues/">Queue library</a>. 
+    It queues up function calls after one we have to wait for and then works them off as soon as the work is done.
+  </p>
+  
+  <h2>Simple Filter</h2>
+  <section class="demo clearfix">
+    <div class="flex">
+      <div class="source">
+        <!--<img src="img/360411_pixelio.png">-->
+        <hr class="indicator">
+      </div>
+    </div>
+    <div class="flex center operator">
+      <hr>
+      <div class="element">
+        <div class="structuringElement">
+            <input value="0">
+            <input value="1" class="checked">
+            <input value="0">
+            <input value="1" class="checked">
+            <input value="1" class="checked">
+            <input value="1" class="checked">
+            <input value="0">
+            <input value="1" class="checked">
+            <input value="0">
+        </div>
+        <div class="controls">
+          <label for="structureSize">size</label>
+          <select for="structureSize1" class="structureSize">
+              <option value="9" selected>3x3</option>
+              <option value="25">5x5</option>
+          </select>
+        </div>
+      </div>  
+      <button class="run">Run</button>
+    </div>
+    <div class="flex">
+      <div class="resultArea">
+        <div class="result">
+          <div class="curtain">
+            <!--<img src="img/360411_pixelio.png">-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</article>
+  
+<!-- tools --> 
+<script type="text/javascript" src="js/document-redraw.js"></script>
+<script type="text/javascript" src="js/queue.js"></script>
 
 <!-- self-written JavaScript starts here -->
+<script type="text/javascript" src="js/imageVision.js"></script>
 <script type="text/javascript" src="js/utilities.js"></script>
-<script type="text/javascript" src="js/render.js"></script>
-<script type="text/javascript" src="js/application.js"></script>
+<script type="text/javascript" src="js/Kernel.js"></script>
 <script type="text/javascript" src="js/ui.js"></script>
-</body>
-</html>
+<!--<script type="text/javascript" src="js/render.js"></script>-->
+<script type="text/javascript" src="js/application.js"></script>
