@@ -75,7 +75,7 @@ button {
   background: hsl(200,10%,95%);
 }
 .controls {
-  padding: 21px;
+  margin: 21px;
   text-align: center;
 }
   label {
@@ -84,6 +84,9 @@ button {
   label:not(:first-child) {
     margin-left: 21px;
   }
+.inner {
+  margin: 21px 0;
+}
 #output code {
   display: block;
 }
