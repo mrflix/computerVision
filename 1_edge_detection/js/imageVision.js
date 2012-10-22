@@ -17,94 +17,171 @@
     
       this.ctx.drawImage(this.image, 0, 0);
     
-      this.imgData = this.originalImgData = this.ctx.getImageData(0, 0, this.image.width, this.image.height);
+      // read the image data from canvas
+      this.imgData = this.ctx.getImageData(0, 0, this.image.width, this.image.height);
+      
+      // grayscale
+      
+      this.gray = [];
+      
+      for(var i=0, n=0, l=this.imgData.data.length; i<l; i+=4, n++){
+        var r = this.imgData.data[i  ];
+  			var g = this.imgData.data[i+1];
+  			var b = this.imgData.data[i+2];
+  			
+  		  // weighted grayscale algorithm
+  			this.gray[n] = Math.round(r * 0.3 + g * 0.59 + b * 0.11);
+      }
+      
+      
+      // put the image data in a 2d array
+      this.data = [];
+      
+      for(var y=0, j=0; y<this.image.height; y++){
+          this.data[y] = [];
+          for(var x=0; x<this.image.width; x++, j++){
+              this.data[y][x] = this.gray[j];
+          }
+      }
+      
+      // continue chain
       this.queue.flush(this);
       
       return this;
     },
-    convolve: function( structure, progressCallback, boost ) {
+    convolve: function( filterArray ) {
       this.queue.add( function( self ) {
-        var resultImgData = self.ctx.createImageData(self.imgData);
-        var sample = [];
         
-        for(var i=0, l=self.imgData.data.length; i<l; i++){
-          var value = self.fold(self.imgData.data, i, structure);
-          
-          if(boost) value += boost;
-          
-          resultImgData.data[i] = value;
-          
-          if(i < 100) sample.push(value);
-          // progress callback
-          // if(progressCallback) progressCallback(i % structure.length*4);
+        // single filter case
+        if(typeof filterArray[0] !== "object"){
+          filterArray = [ filterArray ];
         }
-        console.log(JSON.stringify(sample));
-
-        // draw imgData to canvas
-        self.ctx.putImageData(resultImgData, 0, 0);
-
-        // save new imgData
-        self.imgData = resultImgData;
         
+        for(var i=0; i<filterArray.length; i++){
+          var newData = [];
+        
+          for(var y=0; y<self.image.height; y++){
+            newData[y] = [];
+            for(var x=0; x<self.image.width; x++){
+              var value = self.fold(x, y, filterArray[i]);
+        
+              newData[y][x] = value;
+            }
+          }
+        
+          self.data = newData;
+          if( i === 0 ) self.dx = newData;
+          if( i === 1) self.dy = newData;
+        }
       });
       return this;
     },
-    fold: function( data, position, structure ) {
+    fold: function( x, y, filter ) {
       var sum = 0;
       var count = 1;
-      var center = Math.floor( Math.sqrt(structure.length)/2);
+      var width = Math.sqrt(filter.length);
+      var center = Math.floor( filter.length/2 );
     
-      for(var i=0, l=structure.length; i<l; i++){
-        var multiplicator = structure[i];
+      for(var i=0, l=filter.length; i<l; i++){
+        var multiplicator = filter[i];
         
-        if(multiplicator !== 0){
-          var x = Math.ceil(position/4) % this.image.width;
-          var y = Math.floor(position/data.length);
-          var structureX = ( i % structure.length ) - center;
-          var structureY = Math.ceil( i/structure.length ) - center;
-          var offset, value = 255;
+        if( multiplicator !== 0 ){
+          var filterX = x + ( i % width ) - center;
+          var filterY = y + Math.floor( i/width ) - center;
+          var value;
           
-          if( ( x + structureX ) >= 0 && ( x + structureX ) < this.image.width  && 
-              ( y + structureY ) >= 0 && ( y + structureY ) < this.image.height ){
-            offset = structureY * (this.image.width*4) + (structureX*4);
-            value = data[position + offset];
-          }
+          filterX = Math.max(0, Math.min(this.image.width, filterX));
+          filterY = Math.max(0, Math.min(this.image.height, filterY));
           
-          if(position >= 0 && position < 473){ console.log(x+structureX,( x + structureX ) >= 0 && ( x + structureX ) < this.image.width  && 
-              ( y + structureY ) >= 0 && ( y + structureY ) < this.image.height ); };
-          //if(position > 427 && position < 500){ console.log("x %i, y %i, sx %i, sy %i, offset %i, pos %i, = %i", x, y, structureX,structureY, offset, position, value) };
-          //count += Math.abs(multiplicator);
+          value = this.data[filterY][filterX];
+          
+          sum += multiplicator * value;
         }
       }
     
       return count === 0 ? 0 : sum/count;
-      //return count === 0 ? 0 : sum/count;
     },
-    grayscale: function(){
-      this.queue.add( function( self ) {
-        var grayImgData = self.ctx.createImageData(self.imgData);
-
-        for(var i=0, n=0, l=self.imgData.data.length; i<l; i+=4, n++){
-          var r = self.imgData.data[i  ];
-    			var g = self.imgData.data[i+1];
-    			var b = self.imgData.data[i+2];
-    			var gray = Math.round(r * 0.3 + g * 0.59 + b * 0.11);
-
-    		  // weighted grayscale algorithm
-    		  grayImgData.data[i  ] = gray;
-    		  grayImgData.data[i+1] = gray;
-    		  grayImgData.data[i+2] = gray;
-    		  grayImgData.data[i+3] = 255;
+    absolute: function(){
+      this.queue.add(function(self){
+        self.showAbsolute = true;
+        for(var y=0; y<self.image.height; y++){
+          for(var x=0; x<self.image.width; x++){
+            self.data[y][x] = Math.sqrt(Math.pow(self.dx[y][x], 2) + Math.pow(self.dy[y][x], 2));
+          }
         }
-        
-        self.imgData = grayImgData;
-        
-        // draw imgData to canvas
-        self.ctx.putImageData(self.imgData, 0, 0);
       });
       return this;
     },
-    appendTo: function(selector) {
+    direction: function(){
+      this.queue.add(function(self){
+        self.showDirection = true;
+        self.direction = [];
+          
+        for(var y=0; y<self.image.height; y++){
+          
+          self.direction[y] = [];
+          
+          for(var x=0; x<self.image.width; x++){
+            var angle = Math.atan2(self.dy[y][x], self.dx[y][x]);
+            
+            angle *= 180 / Math.PI / 360;
+            
+            self.direction[y][x] = 255 * angle;
+          }
+        }
+      });
+      return this;
+    },
+    boost: function(amount){
+      this.queue.add(function(self){
+        for(var y=0; y<self.image.height; y++){
+          for(var x=0; x<self.image.width; x++){
+            self.data[y][x] += amount;
+          }
+        }
+      });
+      return this;
+    },
+    colorize: function(){
+      this.queue.add(function(self){
+        self.useColor = true;
+      });
+      return this;
+    },
+    render: function(){
+      var imgData = this.ctx.createImageData(this.imgData);
+      
+      for(var y=0, i=0; y<this.image.height; y++){
+          for(var x=0; x<this.image.width; x++, i+=4){
+            var value = this.data[y][x];
+            
+            if(this.showDirection) value = this.direction[y][x];
+            
+            if(this.useColor){
+              var hue = value/255 * 360;
+              var brightness = 100;
+              
+              if(this.showDirection && this.showAbsolute)
+                brightness = this.data[y][x]/255 * 100;
+              
+              var rgb = color.rgbFromHsb( [hue, 100, brightness] );
+              
+              imgData.data[i] = rgb[0];
+              imgData.data[i+1] = rgb[1];
+              imgData.data[i+2] = rgb[2];
+            } else {
+              imgData.data[i] = imgData.data[i+1] = imgData.data[i+2] = value;
+            }
+            
+            imgData.data[i+3] = 255;
+          }
+      }
+      
+      this.ctx.putImageData(imgData, 0, 0);
+      
+      return this;
+    },
+    appendTo: function(selector, fill) {
       this.queue.add( function( self ) {
         var context;
     
@@ -115,8 +192,22 @@
           // selector
           context = document.querySelector(selector);
         }
-    
+      
+        if(fill){
+          // remove all child elements
+          while (context.hasChildNodes()) {
+              context.removeChild(context.lastChild);
+          }
+        }
+        
+        self.render();
         context.appendChild(self.canvas);
+      });
+      return this;
+    },
+    fill: function(selector){
+      this.queue.add( function( self ) {
+        self.appendTo(selector, true);
       });
       return this;
     }

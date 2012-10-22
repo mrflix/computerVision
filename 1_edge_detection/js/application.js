@@ -1,67 +1,76 @@
-var element = [
-   -1, 0, 1,
-   -2, 0, 2,
-   -1, 0, 1
-];
-var structure = new Kernel(element);
+var folder = 'img/';
+var image = '360411_pixelio.png';
+var technique = 'gradientDirection';
+var filters = {
+  xGradient: [0, 0, 0, 0.5, 0, -0.5, 0, 0, 0],
+  yGradient: [0, 0.5, 0, 0, 0, 0, 0, -0.5, 0],
+  xGradientSobel: [0.125, 0, -0.125, 0.25, 0, -0.25, 0.125, 0, -0.125],
+  yGradientSobel: [0.125, 0.25, 0.125, 0, 0, 0, -0.125, -0.25, -0.125]
+};
 
 //
-// Init
-// ----
+// run
+// ===
 //  
-// initializes the program
+// main function, gets called when parameters change
+//
+
+function run(){
+  showSourceImage();
+  
+  var edgeImage = imageVision(folder + image);
+  
+  switch(technique){
+    case 'gradientValue': 
+      edgeImage.convolve([filters.xGradientSobel, filters.yGradientSobel]).absolute().boost(20);
+      break;
+    case 'gradientDirection':
+      edgeImage.convolve([filters.xGradientSobel, filters.yGradientSobel]).direction();
+      break;
+    case 'gradientDirectionColoured':
+      edgeImage.convolve([filters.xGradientSobel, filters.yGradientSobel]).direction().colorize();
+      break;
+    case 'gradientValueAndAngle':
+      edgeImage.convolve([filters.xGradientSobel, filters.yGradientSobel]).absolute().direction().colorize();
+      break;
+    default:
+      edgeImage.convolve(filters[technique]).boost(128);
+      break;
+  }
+  
+  edgeImage.fill('.result');
+}
+
+//
+// compareSpeed
+// ------------
+//  
+// used to compare the speed of seperated and combined sobel-filter
+//
+
+function compareSpeed(){
+  var start = +new Date;
+  testImage.convolve([[0, 1, 0, 0, 2, 0, 0, 1, 0], [0, 0, 0, -1, 0, 1, 0, 0, 0]]);
+  
+  start2 = +new Date;
+  var separately = start2 - start;
+  
+  testImage.convolve([[-1, 0, 1, -2, 0, 2, -1, 0, 1]]);
+  var combined = +new Date - start2;
+  
+  output.innerHTML = "<code>separately: "+ separately +"ms, combined: "+ combined +"ms</code>" + output.innerHTML;
+}
+
+//
+// init
+// ====
+//  
+// initialise the ui and the app
 //
 
 function init(){
-    // initialise the UI
-    UI.init(structure);
-    
-    // start chained work
-    /* imageData(canvas).convolve([
-        0, 0, 0
-        0, 1, 0
-        0, 1, 0
-      ]); */
-  
-  var run = document.querySelector('.run');
-  run.onclick = startFakeProgress;
-  
-  vision = imageVision('img/360411_pixelio.png').grayscale().convolve([0,0,0,-0.5,0,0.5,0,0,0], false, 128).appendTo('.source');
-}
-
-var progress;
-
-function startFakeProgress(){
-  progress = 0;
-  
-  source.classList.add('progress');
-  source.classList.remove('finished');
-  result.classList.remove('finished');
-  
-  placeResult();
-  
-  work(function(i){
-    indicator.style.top = i*100 + "%";
-    curtain.style.height = i*100 + "%";
-    
-    if(i >= 1){
-      source.classList.add('finished');
-      result.classList.add('finished');
-      source.classList.remove('progress');
-      result.style.left = 0;
-      result.style.top = 0;
-      indicator.style.top = "";
-      curtain.style.height = "";
-    }
-  });
-}
-
-function work(callback){
-  progress += 0.005;
-  callback(progress);
-  if(progress < 1){
-    setTimeout(work, 0, callback);
-  }
+  initialiseUI();
+  run();
 }
 
 // get the ball rollin'

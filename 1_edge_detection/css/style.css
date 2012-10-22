@@ -62,154 +62,7 @@ pre {
   font-size: 13px;
   background: hsl(200,10%,95%);
 }
-.demo {
-  margin-top: 1.33em;
-  margin-bottom: 1.33em;
-  position: relative;
-  display: -webkit-box;
-  -webkit-perspective: 1000px;
-  /* get rid of the anoying text selection - this is a webapp - no webpage */
-  -webkit-user-select: none;
-   -khtml-user-select: none;
-     -moz-user-select: none;
-       -o-user-select: none;
-          user-select: none;
-}
-  .source, .resultArea {
-    position: relative;
-  }
-  .flex {
-    display: inline-block;
-  }
-  .resultArea:before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    box-sizing: border-box;
-    background: hsl(200,10%,95%);
-  }
-  .indicator {
-    margin: -1px 0 0;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    border: none;
-    background: red;
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
-    box-shadow: 0 0 5px hsla(0,100%,50%,1);
-    -webkit-transition: opacity 250ms;
-  }
-    .progress .indicator {
-      opacity: 1;
-    }
-    .finished .indicator {
-      opacity: 0;
-    }
-    .indicator:after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background: -webkit-linear-gradient(left, hsla(0,100%,50%,0), hsla(0,100%,50%,.55), hsla(0,100%,50%,0));
-    }
-  .result {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-  }
-  .result.loaded {
-    -webkit-transition: left 1s ease-in-out, top 1s ease-in-out;
-  }
-  .result.finished {
-    -webkit-animation: flyBack 1s ease-in-out;
-  }
-  @-webkit-keyframes flyBack {
-    50% { -webkit-transform: translateZ(144px) }
-  }
-  .curtain {
-    position: absolute;
-    width: 100%;
-    height: 0;
-    top: 0;
-    overflow: hidden;
-  }
-    .finished .curtain {
-      height: 100%;
-    }
- 
-.operator {
-  padding: 0 21px;
-  position: relative;
-}
-  .operator hr {
-    margin: -50px 0 0;
-    height: 1px;
-    width: 100%;
-    left: 0;
-    top: 50%;
-    background: hsl(200,5%,55%);
-    border: none;
-    z-index: -1;
-    position: absolute;
-  }
-.element {
-  text-align: center;
-  position: relative;
-  color: hsl(200,5%,55%);
-  border: 1px solid hsl(200,5%,55%);
-  background: hsl(200,10%,87%);
-  margin-bottom: 13px;
-}
-.center {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-box-pack: center;
-  -webkit-box-align: center;
-}
-.structuringElement {
-  /*margin-top: 96px;*/
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
-  display: inline-block;
-  position: relative;
-  vertical-align: bottom;
-}
-  .structuringElement input {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    float: left;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 100%;
-    text-align: center;
-    font-weight: bold;
-    outline: none;
-    cursor: default;
-    box-sizing: border-box;
-  }
-  .structuringElement.five input {
-      width: 24px;
-      height: 24px;
-  }
-  .structuringElement .checked {
-    color: inherit;
-  }
-  .controls {
-    padding: 3px 5px;
-    background: -webkit-linear-gradient(hsl(200,10%,87%), hsl(200,10%,83%));
-    border-top: 1px solid hsl(200,5%,55%);
-  }
-  
 button {
-  display: block;
-  width: 100%;
   text-align: center;
   border: none;
   color: white;
@@ -217,7 +70,32 @@ button {
   padding: 8px 21px;
   background: hsl(205,100%,50%);
 }
-  
+.demo {
+  margin: 0.34em 0;
+  background: hsl(200,10%,95%);
+}
+.controls {
+  padding: 21px;
+  text-align: center;
+}
+  label {
+    margin-right: 3px;
+  }
+  label:not(:first-child) {
+    margin-left: 21px;
+  }
+#output code {
+  display: block;
+}
+
+.center {
+  display: -webkit-box;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+} 
+.flex {
+  -webkit-box-flex: 1;
+}
 .clearfix:before,
 .clearfix:after {
   display: table;

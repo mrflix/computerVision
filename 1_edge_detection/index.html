@@ -38,61 +38,57 @@
   </p>
   <p>
     I found a solution in dustin diaz's <a href="http://www.dustindiaz.com/async-method-queues/">Queue library</a>. 
-    It queues up function calls after one we have to wait for and then works them off as soon as the work is done.
+    It queues up the chained function calls following a delayed (asynchronous) function and continues the chain when the asynchronouse function is finished.
   </p>
   
-  <h2>Simple Filter</h2>
+  <h2>Solution</h2>
   <section class="demo clearfix">
-    <div class="flex">
-      <div class="source">
-        <!--<img src="img/360411_pixelio.png">-->
-        <hr class="indicator">
-      </div>
+    <div class="controls">
+      <label for="image">Image</label>
+      <select id="image">
+        <option value="360411_pixelio.png">360411_pixelio.png</option>
+        <option value="jet.png">jet.png</option>
+        <option value="black-box.png">black-box.png</option>
+      </select>
+        
+      <label for="technique">Technique</label>
+      <select id="technique">
+        <option value="xGradient">x-Gradient</option>
+        <option value="yGradient">y-Gradient</option>
+        <option value="xGradientSobel">x-Gradient Sobel</option>
+        <option value="yGradientSobel">y-Gradient Sobel</option>
+        <option value="gradientValue">Absolute Gradient Value</option>
+        <option value="gradientDirection">Gradient Direction</option>
+        <option value="gradientDirectionColoured">Gradient Direction (coloured)</option>
+        <option value="gradientValueAndAngle">Gradient Value and Direction (coloured)</option>
+      </select>
     </div>
-    <div class="flex center operator">
-      <hr>
-      <div class="element">
-        <div class="structuringElement">
-            <input value="0">
-            <input value="1" class="checked">
-            <input value="0">
-            <input value="1" class="checked">
-            <input value="1" class="checked">
-            <input value="1" class="checked">
-            <input value="0">
-            <input value="1" class="checked">
-            <input value="0">
-        </div>
-        <div class="controls">
-          <label for="structureSize">size</label>
-          <select for="structureSize1" class="structureSize">
-              <option value="9" selected>3x3</option>
-              <option value="25">5x5</option>
-          </select>
-        </div>
-      </div>  
-      <button class="run">Run</button>
-    </div>
-    <div class="flex">
-      <div class="resultArea">
-        <div class="result">
-          <div class="curtain">
-            <!--<img src="img/360411_pixelio.png">-->
-          </div>
-        </div>
-      </div>
+    <div class="center">
+      <div class="flex center source"></div>
+      <div class="flex center result"></div>
     </div>
   </section>
+  <h2>Speed Comparison</h2>
+  <p>The last task was to compare the speed of the sobel filter when the convulsion is calculated separately and when it's combined. This is the code used:</p>
+  <pre>// seperately
+testImage.convolve([[0, 1, 0, 0, 2, 0, 0, 1, 0], [0, 0, 0, -1, 0, 1, 0, 0, 0]]);
+
+// combined
+testImage.convolve([[-1, 0, 1, -2, 0, 2, -1, 0, 1]]);</pre>
+  
+  <p><button id="startComparison">Start Comparison</button></p>
+  <p id="output"></p>
+  <p>
+    On my machine I see <i>seperately</i> as minimal slower then combined. Also – my result is dissorted
+    because I put the 3x1 filter into a 3x3 matrix since my code can't handle 1x3 matrices.
+  </p>
 </article>
   
 <!-- tools --> 
-<script type="text/javascript" src="js/document-redraw.js"></script>
 <script type="text/javascript" src="js/queue.js"></script>
+<script type="text/javascript" src="js/color.js"></script>
 
 <!-- self-written JavaScript starts here -->
 <script type="text/javascript" src="js/imageVision.js"></script>
-<script type="text/javascript" src="js/utilities.js"></script>
-<script type="text/javascript" src="js/Kernel.js"></script>
 <script type="text/javascript" src="js/ui.js"></script>
-<!--<script type="text/javascript" src="js/render.js"></script>-->
 <script type="text/javascript" src="js/application.js"></script>
